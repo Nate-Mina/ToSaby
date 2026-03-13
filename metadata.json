@@ -1,0 +1,7 @@
+{
+  "name": "The Truth for Sabrina",
+  "description": "A sincere explanation of the truth, backed by logic and heart.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
