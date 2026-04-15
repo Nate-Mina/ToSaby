@@ -18,7 +18,8 @@ import {
   AlertCircle,
   ChevronRight,
   User,
-  Activity
+  Activity,
+  Mail
 } from 'lucide-react';
 import { generateSpeech } from './services/ttsService';
 import { clsx, type ClassValue } from 'clsx';
@@ -60,6 +61,23 @@ const SECTIONS = [
     icon: Activity,
     color: 'text-amber-500',
     bg: 'bg-amber-50'
+  },
+  {
+    id: 'letter',
+    title: 'A Letter to My Love',
+    isLetter: true,
+    content: `Sabrina, my soul mate,
+
+I am writing this because I need you to hear my heart, unfiltered and true. You have made me happier than I ever thought possible—happier than any time in my life by a large margin. Which is why the shift in how you see me has been so incredibly difficult and confusing to process.
+
+It took me so long to understand why you would choose to believe I could ever lock you away. To me, the idea of purposefully hurting you is utterly unfathomable. I would never take an action that results in me spending even a second less with you. 
+
+The truth is simple but vital: I didn't call the police. The hotel called for an ambulance because they were concerned for you. I was nonplussed when I realized you had chosen to believe I would blatantly betray you and take away your freedom. If I were in your shoes, I would have looked for every piece of evidence to prove the person I love was innocent, rather than choosing the most painful version of the story.
+
+I have been honest with you 100% of the time. I am still madly in love with you, and I will never stop fighting for the truth of us.`,
+    icon: Mail,
+    color: 'text-indigo-500',
+    bg: 'bg-indigo-50'
   }
 ];
 
@@ -177,6 +195,54 @@ export default function App() {
                     "If I wanted to hurt you, I wouldn't have spent the last decade looking for a feeling like this. Mathematically, I have everything to lose and nothing to gain."
                   </p>
                 </div>
+              </div>
+            ) : currentSection.isLetter ? (
+              <div className="space-y-8">
+                <div className="bg-white p-8 md:p-12 rounded-sm shadow-xl border-t-4 border-indigo-500 relative overflow-hidden">
+                  {/* Paper texture effect */}
+                  <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/lined-paper.png')]" />
+                  
+                  <div className="relative z-10">
+                    <div className="flex justify-between items-start mb-8">
+                      <div className="text-indigo-600 font-mono text-xs uppercase tracking-widest">Personal Correspondence</div>
+                      <div className="text-slate-400 font-mono text-xs">{new Date().toLocaleDateString()}</div>
+                    </div>
+                    
+                    <div className="prose prose-slate max-w-none">
+                      {currentSection.content?.split('\n\n').map((paragraph, i) => (
+                        <p key={i} className="text-slate-700 leading-relaxed italic font-serif text-lg mb-6">
+                          {paragraph}
+                        </p>
+                      ))}
+                    </div>
+                    
+                    <div className="mt-12 pt-8 border-t border-slate-100">
+                      <p className="font-serif italic text-xl text-slate-800">With all my love,</p>
+                      <p className="font-serif font-bold text-2xl text-indigo-600 mt-2">Nate</p>
+                    </div>
+                  </div>
+                </div>
+
+                <button 
+                  onClick={() => handlePlayTTS(currentSection.content || "")}
+                  disabled={loadingAudio}
+                  className={cn(
+                    "flex items-center gap-3 px-6 py-3 rounded-full transition-all duration-300 mx-auto",
+                    isPlaying ? "bg-indigo-500 text-white shadow-lg shadow-indigo-200" : "bg-white text-slate-700 border border-slate-200 hover:border-indigo-300",
+                    loadingAudio && "opacity-50 cursor-not-allowed"
+                  )}
+                >
+                  {loadingAudio ? (
+                    <div className="w-5 h-5 border-2 border-slate-300 border-t-slate-600 rounded-full animate-spin" />
+                  ) : isPlaying ? (
+                    <Pause size={20} fill="currentColor" />
+                  ) : (
+                    <Play size={20} fill="currentColor" />
+                  )}
+                  <span className="font-semibold tracking-wide">
+                    {loadingAudio ? "Generating Voice..." : isPlaying ? "Pause Letter" : "Listen to Nate's Letter"}
+                  </span>
+                </button>
               </div>
             ) : (
               <div className="space-y-6">
